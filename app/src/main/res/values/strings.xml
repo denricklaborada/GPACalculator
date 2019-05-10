@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">GPA Calculator</string>
+    <string name="numcourseslbl">Number of Courses:</string>
+    <string name="numcourses">0</string>
+    <string name="delete">Delete</string>
+    <string name="clear">Clear</string>
+    <string name="add">Add</string>
+    <string name="courselbl">Course (Optional)</string>
+    <string name="gradelbl">Grade</string>
+    <string name="unitslbl">Units</string>
+    <string name="gradehint">0.0</string>
+    <string name="unitshint">3</string>
+    <string name="gpalbl">GPA:</string>
+    <string name="gpa">0.000</string>
+    <string name="calculate">Calculate</string>
+</resources>
