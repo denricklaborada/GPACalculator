@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * @author Denrick C. Laborada
+ * @version 1.7
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static final String PREF_NAME = "MyPref";
