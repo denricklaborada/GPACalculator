@@ -3,8 +3,8 @@ Created and designed for De La Salle University students to help them calculate 
 
 *Disclaimer: This application is NOT affiliated with, funded, or in any way associated with De La Salle University.*
 
-![alt text][banner]
-![alt text][screen1] ![alt text][screen2]
+[![alt text][banner]](#)
+[![alt text][screen1]](#) [![alt text][screen2]](#)
 
 ## Download
 [Play Store][store link]
