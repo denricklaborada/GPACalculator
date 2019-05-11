@@ -24,15 +24,16 @@ import java.util.List;
 /**
  * @author Denrick C. Laborada
  * @version 1.7
+ * @since May 10, 2019
  */
 public class MainActivity extends AppCompatActivity {
 
-    public static final String PREF_NAME = "MyPref";
-    boolean doubleBackToExitPressedOnce = false;
-    List<EditText> courseList, gradeList, unitsList;
-    Button addBtn = null, deleteBtn = null, calculateBtn = null;
-    TextView gpaLbl = null;
-    SharedPreferences pref = null;
+    private static final String PREF_NAME = "MyPref";
+    private boolean doubleBackToExitPressedOnce = false;
+    private List<EditText> courseList, gradeList, unitsList;
+    private Button addBtn = null, deleteBtn = null, calculateBtn = null;
+    private TextView gpaLbl = null;
+    private SharedPreferences pref = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
