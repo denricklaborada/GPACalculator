@@ -5,15 +5,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
+import android.os.Looper
 import android.text.InputType
-import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import dev.denrick.gpacalculator.databinding.ActivityMainBinding
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.ParseException
-import java.util.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private var pref: SharedPreferences? = null
@@ -21,16 +20,18 @@ class MainActivity : AppCompatActivity() {
     private var courseList = ArrayList<EditText>()
     private var gradeList = ArrayList<EditText>()
     private var unitsList = ArrayList<EditText>()
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         pref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-        addBtn.setOnClickListener { addCourse() }
-        delBtn.setOnClickListener { deleteCourse() }
-        calculateBtn.setOnClickListener { calculateGPA() }
+        binding.addBtn.setOnClickListener { addCourse() }
+        binding.delBtn.setOnClickListener { deleteCourse() }
+        binding.calculateBtn.setOnClickListener { calculateGPA() }
 
         val count = pref?.getInt("count", -1) ?: -1
         if (count != -1) {
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             form.roundingMode = RoundingMode.HALF_UP
             try {
                 val gpaVal = pref?.getFloat("gpa", 0.000f)
-                gpaLbl.text = form.format(form.parse((gpaVal).toString()))
+                binding.gpaLbl.text = form.format(form.parse((gpaVal).toString()))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
         doubleBackToExitPressedOnce = true
         Toast.makeText(this, "Press BACK again to exit", Toast.LENGTH_SHORT).show()
-        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+        Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
 
     public override fun onPause() {
@@ -91,56 +92,61 @@ class MainActivity : AppCompatActivity() {
                 editor?.putInt("units$i", -1)
             }
         }
-        editor?.putFloat("gpa", gpaLbl.text.toString().toFloat())
+        editor?.putFloat("gpa", binding.gpaLbl.text.toString().toFloat())
         editor?.apply()
     }
 
     private fun addCourse() {
-        val tl = findViewById<View>(R.id.table) as TableLayout
-        val count = findViewById<View>(R.id.numCoursesLbl) as TextView
+        val tl = binding.table
+        val count = binding.numCoursesLbl
         val tr = TableRow(this)
         tr.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT)
         val course = EditText(this)
         course.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3.0f)
         course.hint = "COURSE" + (courseList.size + 1)
+        course.isSingleLine = true
         tr.addView(course)
         courseList.add(course)
         val grade = EditText(this)
         grade.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         grade.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f)
         grade.setHint(R.string.gradehint)
+        grade.isSingleLine = true
         tr.addView(grade)
         gradeList.add(grade)
         val units = EditText(this)
         units.inputType = InputType.TYPE_CLASS_NUMBER
         units.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f)
         units.setHint(R.string.unitshint)
+        units.isSingleLine = true
         tr.addView(units)
         unitsList.add(units)
         tl.addView(tr)
         count.text = courseList.size.toString()
         if (count.text.toString().toInt() > 1) {
-            delBtn.setText(R.string.delete)
+            binding.delBtn.setText(R.string.delete)
         } else {
-            delBtn.setText(R.string.clear)
+            binding.delBtn.setText(R.string.clear)
         }
     }
 
     private fun addCourse(courseText: String?, gradeText: Float, unitsText: Int) {
-        val tl = findViewById<View>(R.id.table) as TableLayout
-        val count = findViewById<View>(R.id.numCoursesLbl) as TextView
+        val tl = binding.table
+        val count  =binding.numCoursesLbl
         val tr = TableRow(this)
         tr.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT)
         val course = EditText(this)
         course.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3.0f)
         course.hint = "COURSE" + (courseList.size + 1)
         course.setText(courseText)
+        course.isSingleLine = true
         tr.addView(course)
         courseList.add(course)
         val grade = EditText(this)
         grade.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         grade.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f)
         grade.setHint(R.string.gradehint)
+        grade.isSingleLine = true
         if (gradeText == -1f) {
             grade.setText("")
         } else {
@@ -152,6 +158,7 @@ class MainActivity : AppCompatActivity() {
         units.inputType = InputType.TYPE_CLASS_NUMBER
         units.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f)
         units.setHint(R.string.unitshint)
+        units.isSingleLine = true
         if (unitsText == -1) {
             units.setText("")
         } else {
@@ -162,29 +169,29 @@ class MainActivity : AppCompatActivity() {
         tl.addView(tr)
         count.text = courseList.size.toString()
         if (count.text.toString().toInt() > 1) {
-            delBtn.setText(R.string.delete)
+            binding.delBtn.setText(R.string.delete)
         } else {
-            delBtn.setText(R.string.clear)
+            binding.delBtn.setText(R.string.clear)
         }
     }
 
     private fun deleteCourse() {
         if (courseList.size > 1) {
-            val tl = findViewById<View>(R.id.table) as TableLayout
-            val count = findViewById<View>(R.id.numCoursesLbl) as TextView
+            val tl = binding.table
+            val count = binding.numCoursesLbl
             tl.removeView(tl.getChildAt(tl.childCount - 1))
             courseList.removeAt(courseList.size - 1)
             gradeList.removeAt(gradeList.size - 1)
             unitsList.removeAt(unitsList.size - 1)
             count.text = courseList.size.toString()
             if (courseList.size == 1) {
-                delBtn.setText(R.string.clear)
+                binding.delBtn.setText(R.string.clear)
             }
         } else {
             courseList[0].setText("")
             gradeList[0].setText("")
             unitsList[0].setText("")
-            gpaLbl.setText(R.string.gpa)
+            binding.gpaLbl.setText(R.string.gpa)
         }
     }
 
@@ -211,7 +218,7 @@ class MainActivity : AppCompatActivity() {
         val form = DecimalFormat("0.000")
         form.roundingMode = RoundingMode.HALF_UP
         try {
-            gpaLbl.text = form.format(form.parse(gpa.toString()))
+            binding.gpaLbl.text = form.format(form.parse(gpa.toString()))
         } catch (e: ParseException) {
             e.printStackTrace()
         }
